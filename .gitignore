@@ -1,0 +1,41 @@
+# Hardhat files
+cache
+artifacts
+typechain
+typechain-types
+
+# Foundry files
+/out
+/broadcast
+/cache_forge
+
+# Tests
+coverage
+coverage.json
+
+# Lib
+node_modules
+
+# IDE
+.vscode
+.idea
+.DS_Store
+
+# Package manager
+package-error.log
+
+# Ignore all .env files except .env.example
+.env*
+!.env.example
+
+# NixOS devenv files
+/.direnv
+/.devenv
+.envrc
+flake.lock
+devenv.lock
+.devenv*
+devenv.local.nix
+
+# pre-commit
+.pre-commit-config.yaml
