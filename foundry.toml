@@ -2,9 +2,26 @@
 src = "src"
 out = "out"
 libs = ["lib", "dependencies"]
+optimizer = true
 
 [dependencies]
 forge-std = "1.9.6"
 "@openzeppelin-contracts" = "5.2.0"
 
-# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+[rpc_endpoints]
+base = "https://mainnet.base.org"
+optimism = "https://mainnet.optimism.io"
+arbitrum = "https://arb1.arbitrum.io/rpc"
+devnet = "${TENDERLY_DEVNET_RPC}"
+
+optimismSepolia = "https://sepolia.optimism.io"
+baseSepolia = "https://sepolia.base.org"
+
+[etherscan]
+base = { key = "${BASESCAN_API_KEY}", chain = 8453, url="https://api.basescan.org/api" }
+optimism = { key = "${OPTIMISM_API_KEY}", chain = 10, url="https://api-optimistic.etherscan.io/api" }
+arbitrum = { key = "${ARBISCAN_API_KEY}", chain = 42161, url="https://api.arbiscan.io/api" }
+
+optimismSepolia = { key = "${OPTIMISM_API_KEY}", chain = 11155420, url="https://api-sepolia-optimistic.etherscan.io/api" }
+baseSepolia = { key = "${BASE_API_KEY}", chain = 84532, url="https://api-sepolia.basescan.org/api" }
+devnet = { key = "${TENDERLY_API_KEY}", url = "${TENDERLY_DEVNET_RPC}/verify/etherscan" }
