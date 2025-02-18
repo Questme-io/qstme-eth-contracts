@@ -17,3 +17,15 @@ deploySponsor:
 	--etherscan-api-key ${OPTIMISM_API_KEY} \
 #	--broadcast \
 #	--verify \
+
+deployReward:
+	@echo "Deploying to $(chain)"
+	@echo "Broadcast and verify are commented for security reasons, dont forget to uncomment them."
+	forge script script/DeployQstmeReward.s.sol:DeployQstmeRewardScript \
+	$(chain) \
+	--sig "run(string)" \
+	--via-ir \
+	-vvvv \
+	--etherscan-api-key ${OPTIMISM_API_KEY} \
+#	--broadcast \
+#	--verify \
