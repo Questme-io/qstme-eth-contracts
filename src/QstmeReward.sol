@@ -33,6 +33,8 @@ contract QstmeReward is IQstmeReward, AccessControl, EIP712 {
         _grantRole(OPERATOR_ROLE, _operator);
     }
 
+    receive() external payable {}
+
     /// @inheritdoc IQstmeReward
     function getNonce(address _recipient) external view returns (uint256) {
         return recipientNonce[_recipient];
