@@ -3,6 +3,7 @@ pragma solidity ^0.8.24;
 
 import "lib/forge-std/src/Script.sol";
 import {SafeSingletonDeployer} from "./helpers/SafeSingletonDeployer.sol";
+import {ERC1967Proxy} from "@openzeppelin-contracts-5.2.0/proxy/ERC1967/ERC1967Proxy.sol";
 
 import {QstmeSponsor} from "src/QstmeSponsor.sol";
 
@@ -22,14 +23,17 @@ contract DeployQstmeSponsorScript is Script {
 
         address deployer = vm.addr(deployerPrivateKey);
 
-        address qstmeSponsor = SafeSingletonDeployer.broadcastDeploy({
+        vm.broadcast(deployerPrivateKey);
+        QstmeSponsor qstmeSponsor = new QstmeSponsor();
+
+        address proxy = SafeSingletonDeployer.broadcastDeploy({
             deployerPrivateKey: deployerPrivateKey,
-            creationCode: type(QstmeSponsor).creationCode,
-            args: abi.encode(
-                ADMIN,
-                OPERATOR
-            ),
+            creationCode: type(ERC1967Proxy).creationCode,
+            args: abi.encode(address(qstmeSponsor), ""),
             salt: salt
         });
+
+        vm.broadcast(deployerPrivateKey);
+        QstmeSponsor(proxy).initialize(ADMIN, OPERATOR);
     }
 }
