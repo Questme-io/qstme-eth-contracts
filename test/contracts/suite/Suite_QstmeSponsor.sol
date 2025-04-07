@@ -35,6 +35,11 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
         );
     }
 
+    function test_reinitialize_Revert() public {
+        vm.expectRevert();
+        qstmeSponsor.initialize(address(this), address(this));
+    }
+
     function test_Deployment() public view {
         assertTrue(qstmeSponsor.hasRole(DEFAULT_ADMIN_ROLE, address(this)));
         assertTrue(qstmeSponsor.hasRole(OPERATOR_ROLE, address(this)));

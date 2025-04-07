@@ -6,6 +6,7 @@ import {Storage_QstmeReward} from "test/contracts/storage/Storage_QstmeReward.so
 
 abstract contract Environment_QstmeReward is Storage_QstmeReward {
     function _prepareEnv() internal override {
-        qstmeReward = new Harness_QstmeReward(address(this), address(this));
+        qstmeReward = new Harness_QstmeReward();
+        qstmeReward.initialize(address(this), address(this));
     }
 }

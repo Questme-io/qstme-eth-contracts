@@ -6,6 +6,7 @@ import {Storage_QstmeSponsor} from "test/contracts/storage/Storage_QstmeSponsor.
 
 abstract contract Environment_QstmeSponsor is Storage_QstmeSponsor {
     function _prepareEnv() internal override {
-        qstmeSponsor = new Harness_QstmeSponsor(address(this), address(this));
+        qstmeSponsor = new Harness_QstmeSponsor();
+        qstmeSponsor.initialize(address(this), address(this));
     }
 }

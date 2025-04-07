@@ -5,8 +5,6 @@ import "src/interfaces/IQstmeReward.sol";
 import {QstmeReward} from "src/QstmeReward.sol";
 
 contract Harness_QstmeReward is QstmeReward {
-    constructor(address _admin, address _operator) QstmeReward(_admin, _operator) {}
-
     function exposed_validateRewardSignature(address _recipient, address _asset, uint256 _amount, uint32 _nonce, bytes calldata _signature) view public {
         _validateRewardSignature(_recipient, _asset, _amount, _nonce, _signature);
     }

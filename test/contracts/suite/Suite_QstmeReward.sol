@@ -36,6 +36,11 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
         );
     }
 
+    function test_reinitialize_Revert() public {
+        vm.expectRevert();
+        qstmeReward.initialize(address(this), address(this));
+    }
+
     function test_receiveReward_Ok_NativeToken(
         address _recipient,
         uint256 _amount,

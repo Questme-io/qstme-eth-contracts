@@ -5,8 +5,6 @@ import "src/interfaces/IQstmeSponsor.sol";
 import {QstmeSponsor} from "src/QstmeSponsor.sol";
 
 contract Harness_QstmeSponsor is QstmeSponsor {
-    constructor(address _admin, address _operator) QstmeSponsor(_admin, _operator) {}
-
     function exposed_registerSponsorship(bytes32 _sponsorId, address _asset, uint256 _amount) public {
         _registerSponsorship(_sponsorId, _asset, _amount);
     }
