@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.28;
 
-import {EIP712} from "@openzeppelin-contracts-5.2.0/utils/cryptography/EIP712.sol";
-import {AccessControl} from "@openzeppelin-contracts-5.2.0/access/AccessControl.sol";
+import {EIP712Upgradeable} from "@openzeppelin-contracts-upgradeable-5.2.0/utils/cryptography/EIP712Upgradeable.sol";
+import {AccessControlUpgradeable} from "@openzeppelin-contracts-upgradeable-5.2.0/access/AccessControlUpgradeable.sol";
+import {UUPSUpgradeable} from "@openzeppelin-contracts-upgradeable-5.2.0/proxy/utils/UUPSUpgradeable.sol";
 import {IERC20} from "@openzeppelin-contracts-5.2.0/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin-contracts-5.2.0/token/ERC20/utils/SafeERC20.sol";
 import {ECDSA} from "@openzeppelin-contracts-5.2.0/utils/cryptography/ECDSA.sol";
 
 import "./interfaces/IQstmeSponsor.sol";
 
-contract QstmeSponsor is IQstmeSponsor, AccessControl, EIP712 {
+contract QstmeSponsor is IQstmeSponsor, UUPSUpgradeable, AccessControlUpgradeable, EIP712Upgradeable {
     using SafeERC20 for IERC20;
 
     bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
@@ -19,7 +20,11 @@ contract QstmeSponsor is IQstmeSponsor, AccessControl, EIP712 {
     /// @notice sponsors data
     mapping(bytes32 sponsorId => Sponsor) public sponsors;
 
-    constructor(address _admin, address _operator) EIP712(NAME, VERSION) {
+    function initialize(address _admin, address _operator) public initializer {
+        __AccessControl_init();
+        __EIP712_init(NAME, VERSION);
+        __UUPSUpgradeable_init();
+
         _grantRole(DEFAULT_ADMIN_ROLE, _admin);
         _grantRole(OPERATOR_ROLE, _operator);
     }
@@ -84,6 +89,8 @@ contract QstmeSponsor is IQstmeSponsor, AccessControl, EIP712 {
             )
         );
     }
+
+    function _authorizeUpgrade(address newImplementation) internal override onlyRole(OPERATOR_ROLE) {}
 
     /// @notice Registers sponsorship
     /// @param _sponsorId - Id of the sponsor that should be set

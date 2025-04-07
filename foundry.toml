@@ -7,6 +7,7 @@ optimizer = true
 [dependencies]
 forge-std = "1.9.6"
 "@openzeppelin-contracts" = "5.2.0"
+"@openzeppelin-contracts-upgradeable" = "5.2.0"
 
 [rpc_endpoints]
 base = "https://mainnet.base.org"
