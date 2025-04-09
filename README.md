@@ -1,3 +1,15 @@
+## Deployments
+
+### Sponsor
+| Chain | Mainnet | Testnet                                     |
+|-------|---------|---------------------------------------------|
+| Base  |         | 0x51b188526c48169e1f12e9a83623f3ee215a740b  |
+
+### Reward
+| Chain | Mainnet | Testnet                                     |
+|-------|---------|---------------------------------------------|
+| Base  |         | 0x6b08093d7c1f3c216e830a01b793461764df92b4  |
+
 ## Foundry
 
 **Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
