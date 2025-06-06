@@ -23,8 +23,12 @@ contract DeployQstmeRewardScript is Script {
 
         address deployer = vm.addr(deployerPrivateKey);
 
-        vm.broadcast(deployerPrivateKey);
-        QstmeReward qstmeReward = new QstmeReward();
+        address qstmeReward = SafeSingletonDeployer.broadcastDeploy({
+            deployerPrivateKey: deployerPrivateKey,
+            creationCode: type(QstmeReward).creationCode,
+            args: "",
+            salt: salt
+        });
 
         address proxy = SafeSingletonDeployer.broadcastDeploy({
             deployerPrivateKey: deployerPrivateKey,
