@@ -13,7 +13,7 @@ contract DeployQstmeSponsorScript is Script {
 
     function run(string calldata network) external {
         uint256 deployerPrivateKey = vm.envUint("DEPLOYER_KEY");
-        bytes32 salt = vm.envBytes32("SAFE_SINGLETON_SALT");
+        bytes32 salt = keccak256("QstmeSponsor");
 
         _run(network, deployerPrivateKey, salt);
     }
