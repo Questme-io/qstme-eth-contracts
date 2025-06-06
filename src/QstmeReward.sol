@@ -22,10 +22,9 @@ contract QstmeReward is IQstmeReward, UUPSUpgradeable, AccessControlUpgradeable,
 
     /// @notice controls that function could be called only by admin or operator
     modifier onlyAdminOrOperator() {
-        if (
-            !hasRole(OPERATOR_ROLE, msg.sender) &&
-            !hasRole(DEFAULT_ADMIN_ROLE, msg.sender)
-        ) revert NotAnAdminOrOperator();
+        if (!hasRole(OPERATOR_ROLE, msg.sender) && !hasRole(DEFAULT_ADMIN_ROLE, msg.sender)) {
+            revert NotAnAdminOrOperator();
+        }
         _;
     }
 
@@ -46,7 +45,13 @@ contract QstmeReward is IQstmeReward, UUPSUpgradeable, AccessControlUpgradeable,
     }
 
     /// @inheritdoc IQstmeReward
-    function receiveReward(address _recipient, address _asset, uint256 _amount, uint256 _nonce, bytes calldata _signature) external {
+    function receiveReward(
+        address _recipient,
+        address _asset,
+        uint256 _amount,
+        uint256 _nonce,
+        bytes calldata _signature
+    ) external {
         if (_nonce <= recipientNonce[_recipient]) revert NonceCollision(_nonce, recipientNonce[_recipient]);
         recipientNonce[_recipient] = _nonce;
 
@@ -68,7 +73,11 @@ contract QstmeReward is IQstmeReward, UUPSUpgradeable, AccessControlUpgradeable,
     }
 
     /// @inheritdoc IQstmeReward
-    function generateRewardDigest(address _recipient, address _asset, uint256 _amount, uint256 _nonce) public view returns (bytes32) {
+    function generateRewardDigest(address _recipient, address _asset, uint256 _amount, uint256 _nonce)
+        public
+        view
+        returns (bytes32)
+    {
         return _hashTypedDataV4(
             keccak256(
                 abi.encode(
@@ -90,7 +99,13 @@ contract QstmeReward is IQstmeReward, UUPSUpgradeable, AccessControlUpgradeable,
     /// @param _amount - amount of the asset
     /// @param _nonce - updated recipient nonce
     /// @param _signature - operators signature with RewardParams
-    function _validateRewardSignature(address _recipient, address _asset, uint256 _amount, uint256 _nonce, bytes calldata _signature) view internal {
+    function _validateRewardSignature(
+        address _recipient,
+        address _asset,
+        uint256 _amount,
+        uint256 _nonce,
+        bytes calldata _signature
+    ) internal view {
         bytes32 digest = generateRewardDigest(_recipient, _asset, _amount, _nonce);
         _checkRole(OPERATOR_ROLE, ECDSA.recover(digest, _signature));
     }

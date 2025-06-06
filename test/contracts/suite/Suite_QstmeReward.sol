@@ -14,7 +14,7 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
     using ECDSA for bytes32;
 
     mapping(address => mapping(address => uint256)) public sendAmounts;
-    mapping(address => uint256)public sendNonces;
+    mapping(address => uint256) public sendNonces;
 
     function helper_sign(uint256 _privateKey, bytes32 _digest) public returns (bytes memory signature) {
         address signer = vm.addr(_privateKey);
@@ -28,11 +28,7 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
 
     function expectUnauthorizedAccount(address _sender, bytes32 _role) public {
         vm.expectRevert(
-            abi.encodeWithSelector(
-                IAccessControl.AccessControlUnauthorizedAccount.selector,
-                _sender,
-                _role
-            )
+            abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, _sender, _role)
         );
     }
 
@@ -68,13 +64,7 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
         emit IQstmeReward.Rewarded(_recipient, address(0), _amount);
 
         vm.prank(sender);
-        qstmeReward.receiveReward(
-            _recipient,
-            address(0),
-            _amount,
-            nonce,
-            signature
-        );
+        qstmeReward.receiveReward(_recipient, address(0), _amount, nonce, signature);
 
         assertEq(address(qstmeReward).balance, balanceContractBefore - _amount);
         assertEq(_recipient.balance, balanceRecipientBefore + _amount);
@@ -105,20 +95,10 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
         uint256 balanceRecipientBefore = _recipient.balance;
 
         vm.expectRevert(
-            abi.encodeWithSelector(
-                IQstmeReward.NonceCollision.selector,
-                nonce,
-                qstmeReward.recipientNonce(_recipient)
-            )
+            abi.encodeWithSelector(IQstmeReward.NonceCollision.selector, nonce, qstmeReward.recipientNonce(_recipient))
         );
         vm.prank(sender);
-        qstmeReward.receiveReward(
-            _recipient,
-            address(0),
-            _amount,
-            nonce,
-            signature
-        );
+        qstmeReward.receiveReward(_recipient, address(0), _amount, nonce, signature);
 
         assertEq(address(qstmeReward).balance, balanceContractBefore);
         assertEq(_recipient.balance, balanceRecipientBefore);
@@ -150,13 +130,7 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
 
         vm.expectRevert();
         vm.prank(sender);
-        qstmeReward.receiveReward(
-            _recipient,
-            address(0),
-            _amount,
-            nonce + 1,
-            signature
-        );
+        qstmeReward.receiveReward(_recipient, address(0), _amount, nonce + 1, signature);
 
         assertEq(address(qstmeReward).balance, balanceContractBefore);
         assertEq(_recipient.balance, balanceRecipientBefore);
@@ -187,23 +161,14 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
 
         expectUnauthorizedAccount(signer, OPERATOR_ROLE);
         vm.prank(sender);
-        qstmeReward.receiveReward(
-            _recipient,
-            address(0),
-            _amount,
-            nonce + 1,
-            signature
-        );
+        qstmeReward.receiveReward(_recipient, address(0), _amount, nonce + 1, signature);
 
         assertEq(address(qstmeReward).balance, balanceContractBefore);
-        assertEq(_recipient.balance, balanceRecipientBefore );
+        assertEq(_recipient.balance, balanceRecipientBefore);
         assertEq(qstmeReward.recipientNonce(_recipient), nonce);
     }
 
-    function test_reward_Ok_ERC20(
-        Reward memory _reward,
-        uint32 _operatorPrivateKeyIndex
-    ) public {
+    function test_reward_Ok_ERC20(Reward memory _reward, uint32 _operatorPrivateKeyIndex) public {
         assumeUnusedAddress(_reward.recipient);
         assumeUnusedAddress(_reward.asset);
         vm.assume(_reward.amount > 0);
@@ -229,10 +194,7 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
         assertEq(qstmeReward.recipientNonce(_reward.recipient), nonce + 1);
     }
 
-    function test_reward_RevertIf_NotAnOperator(
-        Reward memory _reward,
-        uint32 _senderPrivateKeyIndex
-    ) public {
+    function test_reward_RevertIf_NotAnOperator(Reward memory _reward, uint32 _senderPrivateKeyIndex) public {
         assumeUnusedAddress(_reward.recipient);
         assumeUnusedAddress(_reward.asset);
         vm.assume(_reward.amount > 0);
@@ -246,9 +208,7 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
         uint256 balanceRecipientBefore = IERC20(_reward.asset).balanceOf(_reward.recipient);
         uint256 nonce = qstmeReward.recipientNonce(_reward.recipient);
 
-        vm.expectRevert(
-            abi.encodeWithSelector(IQstmeReward.NotAnAdminOrOperator.selector)
-        );
+        vm.expectRevert(abi.encodeWithSelector(IQstmeReward.NotAnAdminOrOperator.selector));
         vm.prank(sender);
         qstmeReward.reward(_reward);
 
@@ -257,10 +217,7 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
         assertEq(qstmeReward.recipientNonce(_reward.recipient), nonce);
     }
 
-    function test_rewardBatch_Ok(
-        Reward[] memory _rewards,
-        uint32 _operatorPrivateKeyIndex
-    ) public {
+    function test_rewardBatch_Ok(Reward[] memory _rewards, uint32 _operatorPrivateKeyIndex) public {
         (, address operator) = generateAddress(_operatorPrivateKeyIndex, "operator");
         qstmeReward.helper_grantRole(OPERATOR_ROLE, operator);
 
@@ -296,10 +253,7 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
         }
 
         for (uint256 i = 0; i < _rewards.length; i++) {
-            if (
-                _rewards[i].asset == address(0)
-                || _rewards[i].asset > address(10)
-            ) {
+            if (_rewards[i].asset == address(0) || _rewards[i].asset > address(10)) {
                 vm.expectEmit();
                 emit IQstmeReward.Rewarded(_rewards[i].recipient, _rewards[i].asset, _rewards[i].amount);
             }
@@ -310,15 +264,9 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
 
         for (uint256 i = 0; i < _rewards.length; i++) {
             if (_rewards[i].asset == address(0)) {
-                assertEq(
-                    _rewards[i].recipient.balance,
-                    _recipientBalancesBefore[i] + _rewards[i].amount
-                );
+                assertEq(_rewards[i].recipient.balance, _recipientBalancesBefore[i] + _rewards[i].amount);
 
-                assertEq(
-                    address(qstmeReward).balance,
-                    _contractBalancesBefore[i] - _rewards[i].amount
-                );
+                assertEq(address(qstmeReward).balance, _contractBalancesBefore[i] - _rewards[i].amount);
             } else {
                 assertEq(
                     IERC20(_rewards[i].asset).balanceOf(_rewards[i].recipient),
@@ -338,10 +286,7 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
         }
     }
 
-    function test_rewardBatch_RevertIf_NotAnOperator(
-        Reward[] memory _rewards,
-        uint32 _signerPrivateKeyIndex
-    ) public {
+    function test_rewardBatch_RevertIf_NotAnOperator(Reward[] memory _rewards, uint32 _signerPrivateKeyIndex) public {
         (, address signer) = generateAddress(_signerPrivateKeyIndex, "signer");
 
         for (uint256 i = 0; i < _rewards.length; i++) {
@@ -375,39 +320,22 @@ abstract contract Suite_QstmeReward is Storage_QstmeReward {
             _recipientNoncesBefore[i] = qstmeReward.recipientNonce(_rewards[i].recipient);
         }
 
-        vm.expectRevert(
-            abi.encodeWithSelector(IQstmeReward.NotAnAdminOrOperator.selector)
-        );
+        vm.expectRevert(abi.encodeWithSelector(IQstmeReward.NotAnAdminOrOperator.selector));
         vm.prank(signer);
         qstmeReward.rewardBatch(_rewards);
 
         for (uint256 i = 0; i < _rewards.length; i++) {
             if (_rewards[i].asset == address(0)) {
-                assertEq(
-                    _rewards[i].recipient.balance,
-                    _recipientBalancesBefore[i]
-                );
+                assertEq(_rewards[i].recipient.balance, _recipientBalancesBefore[i]);
 
-                assertEq(
-                    address(qstmeReward).balance,
-                    _contractBalancesBefore[i]
-                );
+                assertEq(address(qstmeReward).balance, _contractBalancesBefore[i]);
             } else {
-                assertEq(
-                    IERC20(_rewards[i].asset).balanceOf(_rewards[i].recipient),
-                    _recipientBalancesBefore[i]
-                );
+                assertEq(IERC20(_rewards[i].asset).balanceOf(_rewards[i].recipient), _recipientBalancesBefore[i]);
 
-                assertEq(
-                    IERC20(_rewards[i].asset).balanceOf(address(qstmeReward)),
-                    _contractBalancesBefore[i]
-                );
+                assertEq(IERC20(_rewards[i].asset).balanceOf(address(qstmeReward)), _contractBalancesBefore[i]);
             }
 
-            assertEq(
-                qstmeReward.recipientNonce(_rewards[i].recipient),
-                _recipientNoncesBefore[i]
-            );
+            assertEq(qstmeReward.recipientNonce(_rewards[i].recipient), _recipientNoncesBefore[i]);
         }
     }
 }

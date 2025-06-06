@@ -18,11 +18,7 @@ interface IQstmeReward {
     /// @param amount - sponsored amount
     /// @param asset - sponsored asset
     /// @dev Zero address in asset should be treated as native token
-    event Rewarded(
-        address indexed recipient,
-        address indexed asset,
-        uint256 indexed amount
-    );
+    event Rewarded(address indexed recipient, address indexed asset, uint256 indexed amount);
 
     /// @notice Thrown when nonce check failed
     /// @param actual - actual nonce
@@ -35,7 +31,7 @@ interface IQstmeReward {
     /// @notice For receiving current nonce for recipient address
     /// @param recipient - address whose nonce should be returned
     /// @return nonce of the requested address
-    function getNonce(address recipient) external returns(uint256);
+    function getNonce(address recipient) external returns (uint256);
 
     /// @notice Sends funds to the recipient
     /// @param recipient - address that should receive the reward
@@ -43,7 +39,8 @@ interface IQstmeReward {
     /// @param amount - amount of the asset
     /// @param nonce - updated recipient nonce
     /// @param signature - signature of the reward digest
-    function receiveReward(address recipient, address asset, uint256 amount, uint256 nonce, bytes calldata signature) external;
+    function receiveReward(address recipient, address asset, uint256 amount, uint256 nonce, bytes calldata signature)
+        external;
 
     /// @notice Sends funds to the recipient
     /// @param reward - reward data to send
@@ -61,6 +58,8 @@ interface IQstmeReward {
     /// @param amount - amount of the asset
     /// @param nonce - updated recipient nonce
     /// @return Digest for setting sponsor
-    function generateRewardDigest(address recipient, address asset, uint256 amount, uint256 nonce) external view returns (bytes32);
-
+    function generateRewardDigest(address recipient, address asset, uint256 amount, uint256 nonce)
+        external
+        view
+        returns (bytes32);
 }

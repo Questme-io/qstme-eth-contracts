@@ -27,18 +27,13 @@ struct Asset {
     uint256 amount;
 }
 
-
 interface IQstmeSponsor {
     /// @notice Emitted when sponsorship is paid
     /// @param sponsorId - id of sponsor
     /// @param amount - sponsored amount
     /// @param asset - sponsored asset
     /// @dev If sponsor paid in native token then asset would be zero address
-    event Sponsored(
-        bytes32 indexed sponsorId,
-        uint256 indexed amount,
-        address indexed asset
-    );
+    event Sponsored(bytes32 indexed sponsorId, uint256 indexed amount, address indexed asset);
 
     /// @notice Emitted when sponsored amount reaches threshold
     /// @param sponsorId - id of sponsor
@@ -81,7 +76,7 @@ interface IQstmeSponsor {
     /// @notice Get sponsor details
     /// @param id - sponsor id
     /// @return sponsor - sponsor details
-    function getSponsor(bytes32 id) external view returns(Sponsor memory);
+    function getSponsor(bytes32 id) external view returns (Sponsor memory);
 
     /// @notice Set sponsor and sponsor it with native or ERC20 token
     /// @param id - sponsor id
@@ -115,7 +110,10 @@ interface IQstmeSponsor {
     /// @param threshold - threshold that should be used for sponsoring
     /// @param nonce - sponsor nonce for avoiding signature reuse
     /// @return Digest for setting sponsor
-    function generateSponsorDigest(bytes32 sponsorId, address asset, uint256 threshold, uint32 nonce) external view returns (bytes32);
+    function generateSponsorDigest(bytes32 sponsorId, address asset, uint256 threshold, uint32 nonce)
+        external
+        view
+        returns (bytes32);
 
     /// @notice Withdraws asset from contract
     /// @param receiver - address to which asset should be withdrawn

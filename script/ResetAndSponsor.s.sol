@@ -27,7 +27,7 @@ contract ResetAndSponsorScript is Script {
     function run(string calldata network) external {
         uint256 deployerPrivateKey = vm.envUint("DEPLOYER_KEY");
 
-        chains["baseSepolia"] = 0x51b188526c48169e1f12e9a83623f3ee215a740b;
+        chains["baseSepolia"] = 0x51b188526C48169e1f12e9A83623f3Ee215a740b;
 
         _run(network, deployerPrivateKey);
     }
@@ -55,6 +55,6 @@ contract ResetAndSponsorScript is Script {
         }
 
         vm.broadcast(deployerPrivateKey);
-        qstMeSponsor.resetAndSendSponsorship{ value: value }(sponsorId, asset, amount, threshold, nonce, signature);
+        qstMeSponsor.resetAndSendSponsorship{value: value}(sponsorId, asset, amount, threshold, nonce, signature);
     }
 }

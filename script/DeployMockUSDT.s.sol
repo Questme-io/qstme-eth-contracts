@@ -17,8 +17,8 @@ contract DeployMockUSDTScript is Script {
         vm.createSelectFork(network);
 
         require(
-            block.chainid == 11155420  // optimismSepolia
-            || block.chainid == 84532, // baseSepolia
+            block.chainid == 11155420 // optimismSepolia
+                || block.chainid == 84532, // baseSepolia
             "Only testnets"
         );
 

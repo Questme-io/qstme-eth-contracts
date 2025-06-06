@@ -16,7 +16,7 @@ contract SendSponsorshipScript is Script {
     function run(string calldata network) external {
         uint256 deployerPrivateKey = vm.envUint("DEPLOYER_KEY");
 
-        chains["optimismSepolia"] = 0x51b188526c48169e1f12e9a83623f3ee215a740b;
+        chains["optimismSepolia"] = 0x51b188526C48169e1f12e9A83623f3Ee215a740b;
 
         _run(network, deployerPrivateKey);
     }
@@ -38,6 +38,6 @@ contract SendSponsorshipScript is Script {
         }
 
         vm.broadcast(deployerPrivateKey);
-        qstMeSponsor.sendSponsorship{ value: value }(sponsorId, asset, amount);
+        qstMeSponsor.sendSponsorship{value: value}(sponsorId, asset, amount);
     }
 }

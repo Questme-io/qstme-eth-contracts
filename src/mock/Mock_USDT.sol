@@ -7,6 +7,7 @@ contract Mock_USDT is ERC20 {
     uint8 public _decimals = 6;
 
     constructor() ERC20("Test USDT", "T_USDT") {}
+
     function mint(address _to, uint256 _amount) external {
         _mint(_to, _amount);
     }
@@ -19,7 +20,7 @@ contract Mock_USDT is ERC20 {
         _decimals = _newDecimals;
     }
 
-    function decimals() override view public returns(uint8) {
+    function decimals() public view override returns (uint8) {
         return _decimals;
     }
 }

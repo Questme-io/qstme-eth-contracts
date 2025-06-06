@@ -27,11 +27,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
 
     function expectUnauthorizedAccount(address _sender, bytes32 _role) public {
         vm.expectRevert(
-            abi.encodeWithSelector(
-                IAccessControl.AccessControlUnauthorizedAccount.selector,
-                _sender,
-                _role
-            )
+            abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, _sender, _role)
         );
     }
 
@@ -58,11 +54,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
         assertEq(sponsor.fulfilledAt, _sponsor.fulfilledAt);
     }
 
-    function test_withdraw_Ok_ERC20asset(
-        address _receiver,
-        Asset memory _asset,
-        uint32 _adminPrivateKeyIndex
-    ) public {
+    function test_withdraw_Ok_ERC20asset(address _receiver, Asset memory _asset, uint32 _adminPrivateKeyIndex) public {
         assumeUnusedAddress(_receiver);
         assumeUnusedAddress(_asset.assetAddress);
 
@@ -88,11 +80,9 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
         assertEq(receiverBalanceAfter, receiverBalanceBefore + _asset.amount);
     }
 
-    function test_withdraw_Ok_NativeAsset(
-        address _receiver,
-        Asset memory _asset,
-        uint32 _adminPrivateKeyIndex
-    ) public {
+    function test_withdraw_Ok_NativeAsset(address _receiver, Asset memory _asset, uint32 _adminPrivateKeyIndex)
+        public
+    {
         vm.assume(_receiver != address(qstmeSponsor));
         assumePayable(_receiver);
 
@@ -117,11 +107,9 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
         assertEq(receiverBalanceAfter, receiverBalanceBefore + _asset.amount);
     }
 
-    function test_withdraw_RevertIf_NotAnAdmin(
-        address _receiver,
-        Asset memory _asset,
-        uint32 _anonymousPrivateKeyIndex
-    ) public {
+    function test_withdraw_RevertIf_NotAnAdmin(address _receiver, Asset memory _asset, uint32 _anonymousPrivateKeyIndex)
+        public
+    {
         vm.assume(_receiver != address(qstmeSponsor));
         assumePayable(_receiver);
 
@@ -143,11 +131,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
         assertEq(receiverBalanceAfter, receiverBalanceBefore);
     }
 
-    function test_withdrawBatch_Ok(
-        address _receiver,
-        Asset[] memory _assets,
-        uint32 _adminPrivateKeyIndex
-    ) public {
+    function test_withdrawBatch_Ok(address _receiver, Asset[] memory _assets, uint32 _adminPrivateKeyIndex) public {
         vm.assume(_receiver != address(qstmeSponsor));
         assumeNotForgeAddress(_receiver);
         assumePayable(_receiver);
@@ -183,10 +167,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
         }
 
         for (uint256 i = 0; i < _assets.length; i++) {
-            if (
-                _assets[i].assetAddress == address(0)
-                || _assets[i].assetAddress > address(10)
-            ) {
+            if (_assets[i].assetAddress == address(0) || _assets[i].assetAddress > address(10)) {
                 vm.expectEmit();
                 emit IQstmeSponsor.Withdrawn(_receiver, _assets[i].assetAddress, _assets[i].amount);
             }
@@ -197,14 +178,10 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
 
         for (uint256 i = 0; i < _assets.length; i++) {
             if (_assets[i].assetAddress == address(0)) {
-                assertEq(
-                    _receiver.balance,
-                    _receiverBalancesBefore[i] + withdrawAmounts[_assets[i].assetAddress]
-                );
+                assertEq(_receiver.balance, _receiverBalancesBefore[i] + withdrawAmounts[_assets[i].assetAddress]);
 
                 assertEq(
-                    address(qstmeSponsor).balance,
-                    _contractBalancesBefore[i] - withdrawAmounts[_assets[i].assetAddress]
+                    address(qstmeSponsor).balance, _contractBalancesBefore[i] - withdrawAmounts[_assets[i].assetAddress]
                 );
             } else {
                 assertEq(
@@ -272,12 +249,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
 
         vm.prank(sender);
         qstmeSponsor.resetAndSendSponsorship{value: amount}(
-            _sponsorId,
-            address(0),
-            amount,
-            _threshold,
-            nonce,
-            signature
+            _sponsorId, address(0), amount, _threshold, nonce, signature
         );
 
         Sponsor memory sponsor = qstmeSponsor.getSponsor(_sponsorId);
@@ -325,12 +297,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
 
         vm.prank(sender);
         qstmeSponsor.resetAndSendSponsorship{value: _amount}(
-            _sponsorId,
-            address(0),
-            _amount,
-            _threshold,
-            nonce,
-            signature
+            _sponsorId, address(0), _amount, _threshold, nonce, signature
         );
 
         Sponsor memory sponsor = qstmeSponsor.getSponsor(_sponsorId);
@@ -387,14 +354,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
         emit IQstmeSponsor.Sponsored(_sponsorId, _amount, _asset);
 
         vm.prank(sender);
-        qstmeSponsor.resetAndSendSponsorship(
-            _sponsorId,
-            _asset,
-            _amount,
-            _threshold,
-            nonce,
-            signature
-        );
+        qstmeSponsor.resetAndSendSponsorship(_sponsorId, _asset, _amount, _threshold, nonce, signature);
 
         Sponsor memory sponsor = qstmeSponsor.getSponsor(_sponsorId);
 
@@ -447,14 +407,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
         emit IQstmeSponsor.Sponsored(_sponsorId, _amount, _asset);
 
         vm.prank(sender);
-        qstmeSponsor.resetAndSendSponsorship(
-            _sponsorId,
-            _asset,
-            _amount,
-            _threshold,
-            nonce,
-            signature
-        );
+        qstmeSponsor.resetAndSendSponsorship(_sponsorId, _asset, _amount, _threshold, nonce, signature);
 
         Sponsor memory sponsor = qstmeSponsor.getSponsor(_sponsorId);
 
@@ -501,14 +454,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
 
         expectUnauthorizedAccount(signer, OPERATOR_ROLE);
         vm.prank(sender);
-        qstmeSponsor.resetAndSendSponsorship(
-            _sponsorId,
-            _asset,
-            _amount,
-            _threshold,
-            nonce,
-            signature
-        );
+        qstmeSponsor.resetAndSendSponsorship(_sponsorId, _asset, _amount, _threshold, nonce, signature);
 
         assertEq(IERC20(_asset).balanceOf(address(qstmeSponsor)), balanceContractBefore);
         assertEq(IERC20(_asset).balanceOf(sender), balanceSenderBefore);
@@ -548,14 +494,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
 
         vm.expectRevert();
         vm.prank(sender);
-        qstmeSponsor.resetAndSendSponsorship(
-            _sponsorId,
-            _asset,
-            _amount,
-            _threshold,
-            nonce,
-            signature
-        );
+        qstmeSponsor.resetAndSendSponsorship(_sponsorId, _asset, _amount, _threshold, nonce, signature);
 
         assertEq(IERC20(_asset).balanceOf(address(qstmeSponsor)), balanceContractBefore);
         assertEq(IERC20(_asset).balanceOf(sender), balanceSenderBefore);
@@ -599,14 +538,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
             )
         );
         vm.prank(sender);
-        qstmeSponsor.resetAndSendSponsorship(
-            _sponsorId,
-            _asset,
-            _amount,
-            _threshold,
-            nonce,
-            signature
-        );
+        qstmeSponsor.resetAndSendSponsorship(_sponsorId, _asset, _amount, _threshold, nonce, signature);
 
         assertEq(IERC20(_asset).balanceOf(address(qstmeSponsor)), balanceContractBefore);
         assertEq(IERC20(_asset).balanceOf(sender), balanceSenderBefore);
@@ -636,11 +568,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
         emit IQstmeSponsor.Sponsored(_sponsorId, _amount, address(0));
 
         vm.prank(sender);
-        qstmeSponsor.sendSponsorship{value: _amount}(
-            _sponsorId,
-            address(0),
-            _amount
-        );
+        qstmeSponsor.sendSponsorship{value: _amount}(_sponsorId, address(0), _amount);
 
         Sponsor memory sponsor = qstmeSponsor.getSponsor(_sponsorId);
 
@@ -673,11 +601,7 @@ abstract contract Suite_QstmeSponsor is Storage_QstmeSponsor {
         emit IQstmeSponsor.Sponsored(_sponsorId, _amount, address(0));
 
         vm.prank(sender);
-        qstmeSponsor.sendSponsorship{value: _amount}(
-            _sponsorId,
-            address(0),
-            _amount
-        );
+        qstmeSponsor.sendSponsorship{value: _amount}(_sponsorId, address(0), _amount);
 
         Sponsor memory sponsor = qstmeSponsor.getSponsor(_sponsorId);
 

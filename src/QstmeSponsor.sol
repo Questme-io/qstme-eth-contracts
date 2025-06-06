@@ -76,7 +76,11 @@ contract QstmeSponsor is IQstmeSponsor, UUPSUpgradeable, AccessControlUpgradeabl
     }
 
     /// @inheritdoc IQstmeSponsor
-    function generateSponsorDigest(bytes32 _sponsorId, address _asset, uint256 _threshold, uint32 _nonce) public view returns (bytes32) {
+    function generateSponsorDigest(bytes32 _sponsorId, address _asset, uint256 _threshold, uint32 _nonce)
+        public
+        view
+        returns (bytes32)
+    {
         return _hashTypedDataV4(
             keccak256(
                 abi.encode(
@@ -118,7 +122,13 @@ contract QstmeSponsor is IQstmeSponsor, UUPSUpgradeable, AccessControlUpgradeabl
     /// @param _threshold - Threshold that should be used for sponsoring
     /// @param _signature - Operators signature with SponsorParams
     /// @dev if sponsor exists it will be reset
-    function _setSponsor(bytes32 _sponsorId, address _asset, uint256 _threshold, uint32 _nonce, bytes calldata _signature) internal {
+    function _setSponsor(
+        bytes32 _sponsorId,
+        address _asset,
+        uint256 _threshold,
+        uint32 _nonce,
+        bytes calldata _signature
+    ) internal {
         if (_nonce <= sponsors[_sponsorId].nonce) revert NonceCollision(_nonce, sponsors[_sponsorId].nonce);
         sponsors[_sponsorId].nonce = _nonce;
 

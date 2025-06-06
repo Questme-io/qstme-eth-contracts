@@ -34,8 +34,8 @@ library SafeSingletonDeployer {
     }
 
     function broadcastDeploy(address deployer, bytes memory creationCode, bytes memory args, bytes32 salt)
-    internal
-    returns (address)
+        internal
+        returns (address)
     {
         VM.broadcast(deployer);
         return _deploy(creationCode, args, salt);
@@ -47,16 +47,16 @@ library SafeSingletonDeployer {
     }
 
     function broadcastDeploy(uint256 deployerPrivateKey, bytes memory creationCode, bytes memory args, bytes32 salt)
-    internal
-    returns (address)
+        internal
+        returns (address)
     {
         VM.broadcast(deployerPrivateKey);
         return _deploy(creationCode, args, salt);
     }
 
     function broadcastDeploy(uint256 deployerPrivateKey, bytes memory creationCode, bytes32 salt)
-    internal
-    returns (address)
+        internal
+        returns (address)
     {
         VM.broadcast(deployerPrivateKey);
         return _deploy(creationCode, "", salt);

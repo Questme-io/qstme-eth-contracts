@@ -10,7 +10,7 @@ contract RewardScript is Script {
     address public constant asset = address(0);
     uint256 public constant amount = 100;
 
-    mapping(string =>  address) public chains;
+    mapping(string => address) public chains;
 
     function helper_sign(uint256 _privateKey, bytes32 _digest) public returns (bytes memory signature) {
         address signer = vm.addr(_privateKey);
@@ -25,7 +25,7 @@ contract RewardScript is Script {
     function run(string calldata network, address recipient) external {
         uint256 deployerPrivateKey = vm.envUint("DEPLOYER_KEY");
 
-        chains["optimismSepolia"] = 0x6b08093d7c1f3c216e830a01b793461764df92b4;
+        chains["optimismSepolia"] = 0x6B08093d7C1F3c216e830A01B793461764df92b4;
 
         _run(network, deployerPrivateKey, recipient);
     }

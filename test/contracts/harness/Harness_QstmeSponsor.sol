@@ -9,7 +9,13 @@ contract Harness_QstmeSponsor is QstmeSponsor {
         _registerSponsorship(_sponsorId, _asset, _amount);
     }
 
-    function exposed_setSponsor(bytes32 _sponsorId, address _asset, uint256 _threshold, uint32 _nonce, bytes calldata _signature) public {
+    function exposed_setSponsor(
+        bytes32 _sponsorId,
+        address _asset,
+        uint256 _threshold,
+        uint32 _nonce,
+        bytes calldata _signature
+    ) public {
         _setSponsor(_sponsorId, _asset, _threshold, _nonce, _signature);
     }
 
