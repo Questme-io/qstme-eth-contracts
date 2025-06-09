@@ -23,7 +23,6 @@ contract DeployQstmeSponsorScript is Script {
 
         address deployer = vm.addr(deployerPrivateKey);
 
-        vm.broadcast(deployerPrivateKey);
         address qstmeSponsor = SafeSingletonDeployer.broadcastDeploy({
             deployerPrivateKey: deployerPrivateKey,
             creationCode: type(QstmeSponsor).creationCode,
